@@ -13,36 +13,35 @@ similarity = pickle.load(open('similarity.pkl','rb'))
 movie_list = movies['title'].values
 tmdb_api_token = os.environ['TMDB_API_TOKEN']
 
-# def poster_fetcher(id):
-#     url = "https://api.themoviedb.org/3/movie/{}?api_key={}".format(id,tmdb_api_token)
-#     response = requests.get(url)
-#     obj  = response.json()
-#     return "https://image.tmdb.org/t/p/w500/" + obj['poster_path']
+def poster_fetcher(id):
+    url = "https://api.themoviedb.org/3/movie/{}?api_key={}".format(id,tmdb_api_token)
+    response = requests.get(url)
+    obj  = response.json()
+    return "https://image.tmdb.org/t/p/w500/" + obj['poster_path']
 
 
 
-# def recommend(movie):
-#     movie_names = []
-#     posters = []
-#     movie_index = movies[movies['title']==movie].index[0]
-#     distance =  similarity[movie_index]
-#     movie_list = sorted((list(enumerate(distance))),reverse=True,key=lambda x : x[1])[1:6]
-#     for i in movie_list:
-#         # movie_id = i[0]
-#         movie_names.append(movies.iloc[i[0]].title)
-#         posters.append(poster_fetcher(movies.iloc[i[0]].movie_id))
-#     return movie_names,posters
+def recommend(movie):
+    movie_names = []
+    posters = []
+    movie_index = movies[movies['title']==movie].index[0]
+    distance =  similarity[movie_index]
+    movie_list = sorted((list(enumerate(distance))),reverse=True,key=lambda x : x[1])[1:6]
+    for i in movie_list:
+        # movie_id = i[0]
+        movie_names.append(movies.iloc[i[0]].title)
+        posters.append(poster_fetcher(movies.iloc[i[0]].movie_id))
+    return movie_names,posters
 
 
 
-# # st.title("movie recommendation system")
-st.title(tmdb_api_token)
+st.title("movie recommendation system")
 
-# selected_movie_name = st.selectbox("select any movie that you like",movie_list)
+selected_movie_name = st.selectbox("select any movie that you like",movie_list)
 
-# if st.button('recommend'):
-#     names,posters = recommend(selected_movie_name)
-#     st.title("recommendations:")
+if st.button('recommend'):
+    names,posters = recommend(selected_movie_name)
+    st.title("recommendations:")
 #     # for (i,j) in zip(names,posters):
 #     #     st.write(i)
 #     #     st.image(j)
@@ -72,18 +71,18 @@ st.title(tmdb_api_token)
 
     
 
-#     col = st.columns(len(names))[0]
-
-# # Use a loop to add images horizontally
-#     for (i,j) in zip(names,posters):
-#         with col:
-#             st.divider()
-#             st.text(i)
-#             st.image(j)
+    col = st.columns(len(names))[0]
 
 
-#     st.divider()
-#     st.text('source - TMDB')
+    for (i,j) in zip(names,posters):
+        with col:
+            st.divider()
+            st.text(i)
+            st.image(j)
+
+
+    st.divider()
+    st.text('Image/title source : TMDB')
 
 
 
